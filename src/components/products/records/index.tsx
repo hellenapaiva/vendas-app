@@ -1,20 +1,27 @@
 import { useState } from "react";
 import { Layout, Input } from "components";
+import { useProductService } from 'app/services'
+import { Product } from 'app/models/products'
 
 export const ProductRegistration: React.FC = () => {
+  const service = useProductService();
+
   const [sku, setSku] = useState<string>("");
   const [price, setPrice] = useState<string>("");
-  const [productName, setProductName] = useState<string>("");
+  const [productname, setProductName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
 
   function handleSubmit() {
-    const products = {
+    const product: Product = {
       sku,
-      price,
-      productName,
+      productname,
+      price: parseFloat(price),
       description,
     };
-    console.log(products);
+
+    service
+        .save(product)
+        .then(responseProduct => console.log(responseProduct));
   }
 
   return (
@@ -43,7 +50,7 @@ export const ProductRegistration: React.FC = () => {
       <div className="columns">
         <Input
           label="Nome: *"
-          value={productName}
+          value={productname}
           columnClasses="is-full"
           onChange={setProductName}
           className="input"
